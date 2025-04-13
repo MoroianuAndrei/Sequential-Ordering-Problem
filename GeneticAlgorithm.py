@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import time
+import os
 from collections import defaultdict
 
 
@@ -500,7 +501,8 @@ def load_sop_file(file_path):
 
 def main():
     # Load the SOP instance from file
-    file_path = "ft70.2.sop"
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(script_dir, "data", "ft70.2.sop")
     cost_matrix, precedence_constraints = load_sop_file(file_path)
     
     # Create SOP instance
