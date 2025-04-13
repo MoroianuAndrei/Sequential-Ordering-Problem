@@ -487,7 +487,7 @@ def load_sop_file(file_path):
 
 def main():
     # Load the SOP instance from file
-    file_path = "br17.10.sop"
+    file_path = "ft70.2.sop"
     cost_matrix, precedence_constraints = load_sop_file(file_path)
     
     # Create SOP instance
