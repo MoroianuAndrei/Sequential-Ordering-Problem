@@ -98,7 +98,11 @@ class AntColonyOptimization:
             
             return feasible[-1]
     
-    def _construct_solution(self, start_node=0):
+    def _construct_solution(self):
+        possible_starts = [node for node in range(self.n) 
+                          if not self.problem.predecessors[node]]
+        start_node = random.choice(possible_starts) if possible_starts else 0
+
         ant_path = [start_node]
         unvisited = set(range(self.n))
         unvisited.remove(start_node)

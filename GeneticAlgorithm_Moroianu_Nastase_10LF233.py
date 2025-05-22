@@ -134,29 +134,38 @@ class GeneticAlgorithm:
         
         return elites + selected
     
+    # def selection(self, ranked_population, k=3):
+    #     elites = [item[0] for item in ranked_population[:self.elite_size]]
+    #     selected = elites[:]
+        
+    #     for _ in range(self.population_size - self.elite_size):
+    #         contenders = random.sample(ranked_population, k)
+    #         winner = min(contenders, key=lambda x: x[1])
+    #         selected.append(winner[0])
+        
+    #     return selected
+    
     def ordered_crossover(self, parent1, parent2):
         n = len(parent1)
         
-        for _ in range(10):
-            start = random.randint(0, n-2)
-            end = random.randint(start+1, n-1)
+        start = random.randint(0, n-2)
+        end = random.randint(start+1, n-1)
             
-            child = [None] * n
-            for i in range(start, end+1):
-                child[i] = parent1[i]
+        child = [None] * n
+        for i in range(start, end+1):
+            child[i] = parent1[i]
             
-            remaining = [node for node in parent2 if node not in child[start:end+1]]
-            j = 0
-            for i in range(n):
-                if child[i] is None:
-                    child[i] = remaining[j]
-                    j += 1
+        remaining = [node for node in parent2 if node not in child[start:end+1]]
+        j = 0
+        for i in range(n):
+            if child[i] is None:
+                child[i] = remaining[j]
+                j += 1
             
-            if self.problem.is_valid_solution(child):
-                return child
-        
-        return self.repair_sequence(child)
-        # return self.generate_valid_solution()
+        if self.problem.is_valid_solution(child):
+            return child
+        else:
+            return self.repair_sequence(child)
     
     def repair_sequence(self, child):
         constraints = self.problem.precedence_constraints
@@ -206,12 +215,6 @@ class GeneticAlgorithm:
             
             node1 = mutated[pos1]
             node2 = mutated[pos2]
-            
-            if node2 in self.problem.must_precede[node1]:
-                continue
-            
-            if node1 in self.problem.must_precede[node2]:
-                continue
             
             mutated[pos1], mutated[pos2] = mutated[pos2], mutated[pos1]
             
@@ -328,7 +331,7 @@ def load_sop_file(file_path):
 
 def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(script_dir, "data", "ESC12.sop")
+    file_path = os.path.join(script_dir, "data", "ESC47.sop")
     cost_matrix, precedence_constraints = load_sop_file(file_path)
     
     problem = SequentialOrderingProblem(cost_matrix, precedence_constraints)
@@ -336,7 +339,7 @@ def main():
     ga = GeneticAlgorithm(
         problem,
         population_size=200,
-        elite_size=10,
+        elite_size=5,
         crossover_rate = 0.9,
         mutation_rate=0.1,
         generations=500
